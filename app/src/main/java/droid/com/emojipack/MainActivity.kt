@@ -119,13 +119,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUpEmojiPopup() {
-        emojiPopup = EmojiPopup.Builder.fromRootView(rootView)
+        emojiPopup = EmojiPopup.Builder.fromRootView(this, rootView)
             .setOnEmojiBackspaceClickListener { Log.d(TAG, "Clicked on Backspace") }
             .setOnEmojiClickListener { imageView, emoji -> Log.d(TAG, "Clicked on emoji") }
             .setOnEmojiPopupShownListener { emojiButton?.setImageResource(R.drawable.ic_keyboard) }
             .setOnSoftKeyboardOpenListener { Log.d(TAG, "Opened soft keyboard") }
             .setOnEmojiPopupDismissListener { emojiButton?.setImageResource(R.drawable.emoji_ios_category_people) }
             .setOnSoftKeyboardCloseListener { Log.d(TAG, "Closed soft keyboard") }
+            .setOnMediaSelectionFromKeyboardClickListener {
+                Log.d(
+                    TAG,
+                    "Media selected keyboard $it"
+                )
+            }
             .build(editText!!)
     }
 

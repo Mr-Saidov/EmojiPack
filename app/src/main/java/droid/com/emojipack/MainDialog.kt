@@ -80,7 +80,7 @@ class MainDialog : DialogFragment() {
     }
 
     private fun setUpEmojiPopup() {
-        emojiPopup = EmojiPopup.Builder.fromRootView(rootView)
+        emojiPopup = EmojiPopup.Builder.fromRootView(requireActivity(), rootView)
             .setOnEmojiBackspaceClickListener { Log.d(TAG, "Clicked on Backspace") }
             .setOnEmojiClickListener { imageView, emoji -> Log.d(TAG, "Clicked on emoji") }
             .setOnEmojiPopupShownListener { emojiButton?.setImageResource(R.drawable.ic_keyboard) }

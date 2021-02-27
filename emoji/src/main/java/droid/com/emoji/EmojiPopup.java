@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -21,6 +22,7 @@ import droid.com.emoji.listeners.OnEmojiClickListener;
 import droid.com.emoji.listeners.OnEmojiLongClickListener;
 import droid.com.emoji.listeners.OnEmojiPopupDismissListener;
 import droid.com.emoji.listeners.OnEmojiPopupShownListener;
+import droid.com.emoji.listeners.OnMediaSelectionFromKeyboard;
 import droid.com.emoji.listeners.OnSoftKeyboardCloseListener;
 import droid.com.emoji.listeners.OnSoftKeyboardOpenListener;
 
@@ -28,7 +30,8 @@ public final class EmojiPopup {
     static final int MIN_KEYBOARD_HEIGHT = 100;
 
     final View rootView;
-    final Activity context;
+    final Context context;
+    final Activity activity;
 
     @NonNull
     final RecentEmoji recentEmoji;
@@ -52,7 +55,7 @@ public final class EmojiPopup {
     final ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         @Override
         public void onGlobalLayout() {
-            final Rect rect = Utils.windowVisibleDisplayFrame(context);
+            final Rect rect = Utils.windowVisibleDisplayFrame(activity);
             final int heightDifference = rootView.getHeight()/*Utils.screenHeight(context)*/ - rect.bottom;
 
             if (heightDifference > Utils.dpToPx(context, MIN_KEYBOARD_HEIGHT)) {
@@ -78,11 +81,13 @@ public final class EmojiPopup {
                     }
 
                     dismiss();
-                    Utils.removeOnGlobalLayoutListener(context.getWindow().getDecorView(), onGlobalLayoutListener);
+                    Utils.removeOnGlobalLayoutListener(activity.getWindow().getDecorView(), onGlobalLayoutListener);
                 }
             }
         }
     };
+    @Nullable
+    OnMediaSelectionFromKeyboard onMediaSelectionFromKeyboard;
     @Nullable
     OnEmojiBackspaceClickListener onEmojiBackspaceClickListener;
     @Nullable
@@ -90,9 +95,10 @@ public final class EmojiPopup {
     @Nullable
     OnEmojiPopupDismissListener onEmojiPopupDismissListener;
 
-    EmojiPopup(@NonNull final View rootView, @NonNull final EmojiEditText emojiEditText,
+    EmojiPopup(@NonNull final Activity activity, @NonNull final View rootView, @NonNull final EmojiEditText emojiEditText,
                @Nullable final RecentEmoji recent, @Nullable final VariantEmoji variant) {
-        this.context = Utils.asActivity(rootView.getContext());
+        this.activity = activity;
+        this.context = rootView.getContext();
         this.rootView = rootView.getRootView();
         this.emojiEditText = emojiEditText;
         this.recentEmoji = recent != null ? recent : new RecentEmojiManager(context);
@@ -125,6 +131,14 @@ public final class EmojiPopup {
         };
 
         variantPopup = new EmojiVariantPopup(this.rootView, clickListener);
+        emojiEditText.setOnMediaSelectionFromKeyboard(new OnMediaSelectionFromKeyboard() {
+            @Override
+            public void onMediaSelect(Uri uri) {
+                if (onMediaSelectionFromKeyboard != null) {
+                    onMediaSelectionFromKeyboard.onMediaSelect(uri);
+                }
+            }
+        });
 
         final EmojiView emojiView = new EmojiView(context, clickListener, longClickListener, recentEmoji, variantEmoji);
         emojiView.setOnEmojiBackspaceClickListener(new OnEmojiBackspaceClickListener() {
@@ -154,8 +168,8 @@ public final class EmojiPopup {
     public void toggle() {
         if (!popupWindow.isShowing()) {
             // Remove any previous listeners to avoid duplicates.
-            Utils.removeOnGlobalLayoutListener(context.getWindow().getDecorView(), onGlobalLayoutListener);
-            context.getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(onGlobalLayoutListener);
+            Utils.removeOnGlobalLayoutListener(activity.getWindow().getDecorView(), onGlobalLayoutListener);
+            activity.getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(onGlobalLayoutListener);
 
             if (isKeyboardOpen) {
                 // If the keyboard is visible, simply show the emoji popup.
@@ -175,7 +189,7 @@ public final class EmojiPopup {
         }
 
         // Manually dispatch the event. In some cases this does not work out of the box reliably.
-        context.getWindow().getDecorView().getViewTreeObserver().dispatchOnGlobalLayout();
+        activity.getWindow().getDecorView().getViewTreeObserver().dispatchOnGlobalLayout();
     }
 
     public boolean isShowing() {
@@ -211,6 +225,8 @@ public final class EmojiPopup {
     public static final class Builder {
         @NonNull
         private final View rootView;
+        @NonNull
+        private final Activity activity;
         @Nullable
         private OnEmojiPopupShownListener onEmojiPopupShownListener;
         @Nullable
@@ -224,11 +240,14 @@ public final class EmojiPopup {
         @Nullable
         private OnEmojiPopupDismissListener onEmojiPopupDismissListener;
         @Nullable
+        private OnMediaSelectionFromKeyboard onMediaSelectionFromKeyboard;
+        @Nullable
         private RecentEmoji recentEmoji;
         @Nullable
         private VariantEmoji variantEmoji;
 
-        private Builder(final View rootView) {
+        private Builder(final Activity activity, final View rootView) {
+            this.activity = activity;
             this.rootView = Utils.checkNotNull(rootView, "The root View can't be null");
         }
 
@@ -238,8 +257,8 @@ public final class EmojiPopup {
          * @return builder For building the {@link EmojiPopup}.
          */
         @CheckResult
-        public static Builder fromRootView(final View rootView) {
-            return new Builder(rootView);
+        public static Builder fromRootView(Activity activity, final View rootView) {
+            return new Builder(activity, rootView);
         }
 
         @CheckResult
@@ -277,6 +296,11 @@ public final class EmojiPopup {
             onEmojiBackspaceClickListener = listener;
             return this;
         }
+        @CheckResult
+        public Builder setOnMediaSelectionFromKeyboardClickListener(@Nullable final OnMediaSelectionFromKeyboard listener) {
+            onMediaSelectionFromKeyboard = listener;
+            return this;
+        }
 
         /**
          * Allows you to pass your own implementation of recent emojis. If not provided the default one
@@ -307,13 +331,14 @@ public final class EmojiPopup {
             EmojiManager.getInstance().verifyInstalled();
             Utils.checkNotNull(emojiEditText, "EmojiEditText can't be null");
 
-            final EmojiPopup emojiPopup = new EmojiPopup(rootView, emojiEditText, recentEmoji, variantEmoji);
+            final EmojiPopup emojiPopup = new EmojiPopup(activity, rootView, emojiEditText, recentEmoji, variantEmoji);
             emojiPopup.onSoftKeyboardCloseListener = onSoftKeyboardCloseListener;
             emojiPopup.onEmojiClickListener = onEmojiClickListener;
             emojiPopup.onSoftKeyboardOpenListener = onSoftKeyboardOpenListener;
             emojiPopup.onEmojiPopupShownListener = onEmojiPopupShownListener;
             emojiPopup.onEmojiPopupDismissListener = onEmojiPopupDismissListener;
             emojiPopup.onEmojiBackspaceClickListener = onEmojiBackspaceClickListener;
+            emojiPopup.onMediaSelectionFromKeyboard = onMediaSelectionFromKeyboard;
             return emojiPopup;
         }
     }
