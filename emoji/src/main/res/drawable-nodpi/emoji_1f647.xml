@@ -1,0 +1,70 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="26.9999dp"
+    android:height="26.9455dp"
+    android:viewportWidth="29.06"
+    android:viewportHeight="29.01">
+  <path
+      android:pathData="M20.96,16.78c-4.01,-2.08 -6.43,-0.19 -6.43,-0.19 0,0 -2.42,-1.89 -6.43,0.24 -3.53,1.84 -8.17,6.14 -7.83,8.08 0,0 10.59,3.34 14.26,3.34 3.67,0 14.26,-3.34 14.26,-3.34 0.34,-1.93 -4.3,-6.24 -7.83,-8.12l0,0zM20.96,16.78l0,0 0,0z"
+      android:fillColor="#428BC1"
+      android:fillType="nonZero"/>
+  <path
+      android:pathData="M15.16,27.51c3.77,-2.56 5.27,-2.51 5.37,-2.56 0.34,0.58 0.82,2.32 0.97,3.19 -0.34,0.82 -5.61,1.26 -6.53,0.39 -0.24,-0.19 -0.29,-0.68 0.19,-1.02l-0,-0zM15.16,27.51l0,0 0,0z"
+      android:fillColor="#FFDD67"
+      android:fillType="nonZero"/>
+  <path
+      android:pathData="M25.65,21.61c1.4,-0.29 4.3,1.35 3.14,3.87 -1.02,2.22 -7.16,2.66 -7.3,2.66 -0.15,-0.82 -0.63,-2.61 -0.97,-3.19 1.02,-0.39 3.97,-3.09 5.13,-3.34z"
+      android:fillColor="#428BC1"
+      android:fillType="nonZero"/>
+  <path
+      android:pathData="M13.9,27.51c-3.77,-2.56 -5.27,-2.51 -5.37,-2.56 -0.34,0.58 -0.82,2.32 -0.97,3.19 0.34,0.82 5.61,1.26 6.53,0.39 0.24,-0.19 0.29,-0.68 -0.19,-1.02l0,-0zM13.9,27.51l0,0 0,0z"
+      android:fillColor="#FFDD67"
+      android:fillType="nonZero"/>
+  <path
+      android:pathData="M3.41,21.61c-1.4,-0.29 -4.3,1.35 -3.14,3.87 1.02,2.22 7.16,2.66 7.3,2.66 0.15,-0.82 0.63,-2.61 0.97,-3.19 -1.02,-0.39 -3.97,-3.09 -5.13,-3.34z"
+      android:fillColor="#428BC1"
+      android:fillType="nonZero"/>
+  <path
+      android:pathData="M19.85,24.81c0,0 1.21,2.03 1.6,3.34 0.05,-1.64 -0.19,-2.51 -0.39,-2.95 0.82,-0.97 4.11,-3.34 4.59,-3.58 -2.08,0.63 -5.8,3.19 -5.8,3.19z"
+      android:fillColor="#2E6C93"
+      android:fillType="nonZero"/>
+  <path
+      android:pathData="M9.21,24.81c0,0 -1.21,2.03 -1.6,3.34 -0.05,-1.64 0.19,-2.51 0.39,-2.95 -0.82,-0.97 -4.11,-3.34 -4.59,-3.58 2.08,0.63 5.8,3.19 5.8,3.19z"
+      android:fillColor="#2E6C93"
+      android:fillType="nonZero"/>
+  <path
+      android:pathData="M14.53,5.8c5.71,0 9.24,3.19 9.24,7.2l0,3.92c0,3.14 -2.47,3.14 -2.47,3.14l-13.88,0c0,0 -2.13,0 -2.13,-3.14 0,-1.5 0,-3.97 0,-3.97 0,-3.97 3.72,-7.16 9.24,-7.16l0,0zM14.53,5.8l0,0 0,0z"
+      android:fillColor="#FFB300"
+      android:fillType="nonZero"/>
+  <path
+      android:pathData="M22.9,17.65c0,0 -0.29,-1.69 -0.34,-2.27 -0.15,-2.08 -2.51,1.21 -8.03,1.21 -5.51,0 -7.88,-3.29 -8.03,-1.21 -0.05,0.58 -0.34,2.27 -0.34,2.27 -1.84,0 -1.84,2.56 0,2.56 0,3.19 4.98,4.59 8.37,4.59 3.38,0 8.37,-1.45 8.37,-4.59 1.84,0 1.84,-2.56 0,-2.56z"
+      android:fillColor="#FFDD67"
+      android:fillType="nonZero"/>
+  <path
+      android:pathData="M16.47,0l1.69,5.08l2.42,-4.31z"
+      android:fillColor="#42ADE2"
+      android:fillType="nonZero"/>
+  <path
+      android:pathData="M24.78,3l-2.27,4.35l4.79,-0.63z"
+      android:fillColor="#42ADE2"
+      android:fillType="nonZero"/>
+  <path
+      android:pathData="M12.79,0l-1.74,5.08l-2.56,-4.31z"
+      android:fillColor="#42ADE2"
+      android:fillType="nonZero"/>
+  <path
+      android:pathData="M4.28,3l2.27,4.35l-4.78,-0.63z"
+      android:fillColor="#42ADE2"
+      android:fillType="nonZero"/>
+  <path
+      android:pathData="M15.89,23.11c-0.87,0.68 -1.84,0.68 -2.71,0 -0.1,-0.1 -0.19,0.05 -0.15,0.19 0.24,0.48 0.77,0.92 1.45,0.92 0.68,0 1.21,-0.44 1.45,-0.92 0.15,-0.15 0.05,-0.29 -0.05,-0.19l0,0zM15.89,23.11l0,0 0,0z"
+      android:fillColor="#937237"
+      android:fillType="nonZero"/>
+  <path
+      android:pathData="M15.6,19.97c1.16,2.18 3.53,2.18 4.69,0 0.05,-0.1 -0.1,-0.15 -0.29,-0.29 -1.16,0.92 -3.09,0.82 -4.16,0 -0.15,0.1 -0.29,0.15 -0.24,0.29l-0,0zM15.6,19.97l0,0 0,0z"
+      android:fillColor="#937237"
+      android:fillType="nonZero"/>
+  <path
+      android:pathData="M8.73,19.97c1.16,2.18 3.53,2.18 4.69,0 0.05,-0.1 -0.1,-0.15 -0.29,-0.29 -1.16,0.92 -3.09,0.82 -4.16,0 -0.15,0.1 -0.29,0.15 -0.24,0.29l-0,0zM8.73,19.97l0,0 0,0z"
+      android:fillColor="#937237"
+      android:fillType="nonZero"/>
+</vector>

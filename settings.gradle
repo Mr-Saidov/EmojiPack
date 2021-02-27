@@ -1,0 +1,3 @@
+include ':emoji'
+include ':app'
+rootProject.name = "EmojiPack"
