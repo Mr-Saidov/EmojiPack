@@ -1,5 +1,7 @@
 package droid.com.emoji;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Paint;
@@ -52,6 +54,36 @@ public class EmojiEditText extends AppCompatEditText {
         EmojiManager.replaceWithImages(getContext(), getText(), emojiSize, defaultEmojiSize);
     }
 
+    @Override
+    public boolean onTextContextMenuItem(int id) {
+        String text = getText().toString();
+        boolean b = super.onTextContextMenuItem(id);
+        switch (id) {
+            case android.R.id.cut:
+            case android.R.id.copy:
+                copyEncryptedTextToClipboard(text);
+                break;
+            case android.R.id.paste:
+                pasteDecryptedText(text);
+                break;
+        }
+        return b;
+    }
+
+    private void pasteDecryptedText(String text) {
+        ClipboardManager clipboardManager = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+        String clipData = clipboardManager.getPrimaryClip().getItemAt(0).getText().toString();
+        setText(text + Security.getInstance().getDecryptedText(getContext(), clipData));
+        setSelection(getText().toString().length());
+    }
+
+    private void copyEncryptedTextToClipboard(String text) {
+        text = text.trim();
+        if (text.isEmpty()) return;
+        ClipboardManager clipboardManager = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+        String encryptedText = Security.getInstance().getEncryptedText(getContext(), text);
+        clipboardManager.setPrimaryClip(ClipData.newPlainText("label", encryptedText));
+    }
     @CallSuper
     public void backspace() {
         final KeyEvent event = new KeyEvent(0, 0, 0, KeyEvent.KEYCODE_DEL, 0, 0, 0, 0, KeyEvent.KEYCODE_ENDCALL);
