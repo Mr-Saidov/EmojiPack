@@ -134,6 +134,16 @@ public final class EmojiManager {
         INSTANCE.emojiRepetitivePattern = Pattern.compile('(' + regex + ")+");
     }
 
+    public static Emoji findCandidateEmoji(@NonNull final CharSequence candidate) {
+        // We need to call toString on the candidate, since the emojiMap may not find the requested entry otherwise, because
+        // the type is different.
+        try {
+            return INSTANCE.emojiMap.get(candidate.toString());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     static void destroy() {
         INSTANCE.emojiMap.clear();
         INSTANCE.categories = null;

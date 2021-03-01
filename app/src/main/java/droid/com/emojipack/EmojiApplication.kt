@@ -15,14 +15,23 @@ import droid.com.emoji.GoogleEmojiProvider
 
 class EmojiApplication : Application() {
     override fun onCreate() {
-        super.onCreate()
         EmojiManager.install(GoogleEmojiProvider())
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        if (BuildConfig.DEBUG) {
-            StrictMode.setThreadPolicy(
-                StrictMode.ThreadPolicy.Builder().detectAll().build()
-            )
-            StrictMode.setVmPolicy(VmPolicy.Builder().detectAll().build())
-        }
+//        if (BuildConfig.DEBUG) {
+//            StrictMode.setThreadPolicy(
+//                StrictMode.ThreadPolicy.Builder().detectAll().build()
+//            )
+//            StrictMode.setVmPolicy(VmPolicy.Builder().detectAll().build())
+//        }
+//        turnOnStrictMode()
+        StrictMode.setThreadPolicy(
+            StrictMode.ThreadPolicy.Builder().detectDiskReads().detectDiskWrites()
+                .detectNetwork().penaltyLog().build()
+        )
+        StrictMode.setVmPolicy(
+            VmPolicy.Builder().detectLeakedClosableObjects().penaltyLog().penaltyDeath().build()
+        )
+        super.onCreate()
+
     }
 }

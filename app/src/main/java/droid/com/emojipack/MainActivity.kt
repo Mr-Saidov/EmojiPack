@@ -2,17 +2,25 @@ package droid.com.emojipack
 
 import android.graphics.PorterDuff
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import droid.com.emoji.Emoji
 import droid.com.emoji.EmojiEditText
 import droid.com.emoji.EmojiPopup
+import droid.com.emojipack.variant.AXDataAdapter
+import droid.com.emojipack.variant.AXSimpleEmojiDataAdapter
+import droid.com.emojipack.variant.EmojiSuggestionPopup
+import kotlin.concurrent.thread
 
 
 class MainActivity : AppCompatActivity() {
@@ -21,11 +29,52 @@ class MainActivity : AppCompatActivity() {
     var editText: EmojiEditText? = null
     var rootView: ViewGroup? = null
     var emojiButton: ImageView? = null
+    lateinit var dataAdapter: AXDataAdapter<Emoji>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         chatAdapter = ChatAdapter()
         editText = findViewById(R.id.main_activity_chat_bottom_message_edittext)
+        /////// new  emoji data
+        thread {
+            dataAdapter = AXSimpleEmojiDataAdapter(this)
+        }
+        val variantPopup =
+            EmojiSuggestionPopup(editText!!, object : EmojiSuggestionPopup.OnEmojiClickListener {
+                override fun onEmojiClick(emoji: View, imageView: Emoji) {
+                    Log.e(TAG, "onEmojiClick: " + imageView.unicode)
+                }
+            })
+
+
+        editText?.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (p0.isNullOrEmpty()) {
+                    variantPopup.dismiss()
+                    return
+                }
+                val result = dataAdapter.searchFor(p0.toString())
+                if (!result.isNullOrEmpty()) {
+                    Log.e(TAG, "onTextChanged: " + result.size)
+                    variantPopup.dismiss()
+                    variantPopup.show(editText!!, result)
+                } else {
+                    Log.e(TAG, "onTextChanged: " + result.size)
+                    variantPopup.dismiss()
+                }
+            }
+
+        })
+
+
         rootView = findViewById(R.id.main_activity_root_view)
         emojiButton = findViewById(R.id.main_activity_emoji)
         val sendButton: ImageView = findViewById(R.id.main_activity_send)
@@ -66,7 +115,9 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.getItemId()) {
             R.id.show_dialog -> {
-                MainDialog.show(this)
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.main_activity_root_view, MyFragment()).commit()
+//                MainDialog.show(this)
                 true
             }
             R.id.variantIos -> {
